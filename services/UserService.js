@@ -1,21 +1,37 @@
+const User = require('./../models/user')
 
 class UserService {
-    constructor() {}
-    getAll(){
-        return [];
+    constructor() { }
+    async getAll() {
+        const users = await User.find()
+        return users
     }
-    getOne(id){
-        return {id}
+    async getOne(id) {
+        return await User.findById(id)
     }
-    add(data){
-        return data
+    async add(data) {
+        const user = new User()
+        user.username = data.username
+        user.email = data.email
+        await user.save()
+
+        return user
     }
-    update(id, data){
-        return {id, data}
+    async update(id, data) {
+        const user = await this.getOne(id)
+        if (!user) return null
+
+        user.username = data.username || user.username
+        await user.save()
+        return user
     }
-    remove(id){
-        return {id}
-    }   
+    async remove(id) {
+        const user = await this.getOne(id)
+        if (!user) return null
+        await user.remove()
+
+        return id
+    }
 }
 
 module.exports = UserService

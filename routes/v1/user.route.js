@@ -2,40 +2,52 @@ const routes = require('express').Router()
 const UserService = require('../../services/UserService')
 const userService = new UserService()
 
-routes.get('/', (req, res) => {
+routes.get('/', async (req, res) => {
     try {
-        return res.json(userService.getAll());
+        const users = await userService.getAll()
+        return res.json(users);
     } catch (error) {
         console.log(error)
         return null
     }
 })
 
-routes.get('/:id', (req, res) => {
+routes.get('/:id', async (req, res) => {
     const { id } = req.params
     try {
-        return res.json(userService.getOne(id));
+        const user = await userService.getOne(id)
+        return res.json(user);
     } catch (error) {
         console.log(error)
         return null
     }
 })
 
-routes.post('/', (req, res) => {
-    const { data } = req.body
+routes.post('/', async (req, res) => {
     try {
-        return res.json(userService.add(data));
+        const user = await userService.add(req.body)
+        return res.json(user);
     } catch (error) {
         console.log(error)
         return null
     }
 })
 
-routes.put('/:id', (req, res) => {
+routes.put('/:id', async (req, res) => {
     const { id } = req.params
-    const { data } = req.body
     try {
-        return res.json(userService.update(id, data));
+        const user = await userService.update(id, req.body)
+        return res.json(user);
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+})
+routes.delete('/:id', async (req, res) => {
+    const { id } = req.params
+    try {
+        const user = await userService.remove(id)
+        return res.json(user);
     } catch (error) {
         console.log(error)
         return null
